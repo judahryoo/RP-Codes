@@ -1,0 +1,17 @@
+function [atilde,gaps]=atildegap(Theta,r,rho)
+
+%calculating atilde
+Otheta=sort(Theta);
+bp=Otheta-(r/rho); bp(1)=bp(1)+2*pi;
+ep=Otheta+(r/rho); cep=circshift(ep,[-1 1]);
+ovlp= bp <= cep; dv=find(ovlp<1);
+    empang=abs(bp(dv)-cep(dv));
+    atilde=rho*sum(empang); %available space 
+
+%calculating gaps
+cotheta=circshift(Otheta,[1 -1]);
+cotheta(end)=cotheta(end)+2*pi;
+delta=abs(cotheta-Otheta);
+gaps=rho.*delta -r;
+
+end
