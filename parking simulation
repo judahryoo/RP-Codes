@@ -1,0 +1,26 @@
+function [Theta,t]=rponly(r,rho)
+
+theta1 = 2*pi*rand(); %initial car
+Theta=[theta1];  %'street of cars'
+gaps=2*pi*rho-r;
+
+while max(gaps)>r
+
+    lendpts=sort(Theta)+(r/rho); rendpts=sort(Theta)-(r/rho); rendpts(1)=rendpts(1)+2*pi;
+    crendpts=circshift(rendpts,[1 -1]);
+    g=crendpts>lendpts; intv2=crendpts(g); intv1=lendpts(g);
+    m=[intv1;intv2]; d=diff(m,1);
+    pf=cumsum(d); range=pf(end);
+    pick1=range*rand; pick2=pick1<=pf;
+    [dummy,pick3]=max(pick2);
+    ss=intv1+d.*rand(1,sum(g));
+    alpha=ss(pick3);
+
+ Theta(end+1)=alpha;
+
+   %new gaps and new available space
+   [atilde gaps]=atildegap(Theta,r,rho);  
+    
+end
+Theta(Theta>2*pi)=Theta(Theta>2*pi)-2*pi;
+end
